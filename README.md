@@ -2,6 +2,10 @@
 
 TODO: Write a gem description
 
+## Requirements
+
+https://github.com/joefitzgerald/packer-windows
+
 ## Installation
 
 Add this line to your application's Gemfile:
