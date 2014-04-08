@@ -12,8 +12,7 @@ module Kitchen
       default_config :sudo, false
       default_config :require_chef_omnibus, false
       default_config :windows_root_path, 'C:\Windows\Temp\kitchen'
-      default_config :ruby_bindir, 'C:\opscode\chef\embedded\bin'
-      default_config :chef_bindir, 'C:\opscode\chef\bin'
+      default_config :windows_chef_bindir, 'C:\opscode\chef\bin'
 
       def run_command
         args = [
@@ -26,7 +25,8 @@ module Kitchen
         if config[:json_attributes]
           args << "--json-attributes #{config[:windows_root_path]}\\dna.json"
         end
-        ["#{config[:chef_bindir]}\\chef-client -z"].concat(args).join(" ")
+        windows_chef_bindir = config[:windows_chef_bindir].gsub(/\\/, '\\')
+        ["#{windows_chef_bindir}\\chef-client -z"].concat(args).join(" ")
       end
 
       private
