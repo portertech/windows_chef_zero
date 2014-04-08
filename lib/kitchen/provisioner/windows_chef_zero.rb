@@ -15,6 +15,11 @@ module Kitchen
       default_config :windows_chef_bindir, 'C:\opscode\chef\bin'
 
       def run_command
+        start = ["start \"chef-client\" \\B \\W"]
+
+        windows_chef_bindir = config[:windows_chef_bindir].gsub(/\\/, '\\')
+        cmd = ["#{windows_chef_bindir}\\chef-client -z"]
+
         args = [
           "--config #{config[:windows_root_path]}\\client.rb",
           "--log_level #{config[:log_level]}"
@@ -25,8 +30,7 @@ module Kitchen
         if config[:json_attributes]
           args << "--json-attributes #{config[:windows_root_path]}\\dna.json"
         end
-        windows_chef_bindir = config[:windows_chef_bindir].gsub(/\\/, '\\')
-        ["#{windows_chef_bindir}\\chef-client -z"].concat(args).join(" ")
+        (start + cmd + args).join(" ")
       end
 
       private
