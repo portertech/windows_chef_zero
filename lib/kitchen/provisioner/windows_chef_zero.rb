@@ -16,7 +16,7 @@ module Kitchen
 
       def run_command
         windows_chef_bindir = config[:windows_chef_bindir].gsub(/\\/, '\\')
-        cmd = ['cmd \c', "#{windows_chef_bindir}\\chef-client -z"]
+        cmd = ["cmd /c", "#{windows_chef_bindir}\\chef-client -z"]
 
         args = [
           "--config #{config[:windows_root_path]}\\client.rb",
