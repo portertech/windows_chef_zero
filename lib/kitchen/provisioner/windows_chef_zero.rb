@@ -53,6 +53,12 @@ module Kitchen
         }
       end
 
+      def format_config_file(data)
+        data.each.map { |attr, value|
+          [attr, (value.is_a?(Array) ? value.to_s : %{'#{value}'})].join(" ")
+        }.join("\n")
+      end
+
       def prepare_client_rb
         data = windows_chef_client_rb.merge(config[:client_rb])
 
