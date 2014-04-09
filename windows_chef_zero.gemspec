@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = "windows_chef_zero"
-  spec.version       = "0.1.1"
+  spec.version       = "1.0.0"
   spec.authors       = ["Sean Porter"]
   spec.email         = ["portertech@gmail.com"]
   spec.summary       = "A Test-Kitchen Chef Zero provisioner for Windows"
