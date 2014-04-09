@@ -16,14 +16,20 @@ gem "windows_chef_zero"
 
 ```
 platforms:
-  name: windows_2012_r2
-  driver:
-    box: windows_2012_r2
-    customize:
-      memory: 2048
-  provisioner:
-    name: windows_chef_zero
+  - name: windows_2012_r2
+    driver:
+      box: windows_2012_r2
+      customize:
+        memory: 2048
+      http_proxy: null
+      https_proxy: null
+    provisioner:
+      name: windows_chef_zero
 ```
+
+## Notes:
+
+- This provisioner cannot work in conjunction with driver `http_proxy` or `https_proxy`
 
 ## Contributing
 
