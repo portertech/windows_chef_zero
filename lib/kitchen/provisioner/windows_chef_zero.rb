@@ -23,13 +23,12 @@ module Kitchen
       end
 
       def run_command
-        run_script = File.join(config[:root_path], "run_client.bat")
-        "cmd /c #{run_script}"
+        "cmd /c #{config[:windows_root_path]}\\run_client.bat"
       end
 
       private
 
-      def windows_chef_client_rb
+      def default_config_rb
         root = config[:windows_root_path]
 
         {
@@ -57,17 +56,8 @@ module Kitchen
         }.join("\n")
       end
 
-      def prepare_client_rb
-        data = windows_chef_client_rb.merge(config[:client_rb])
-
-        File.open(File.join(sandbox_path, "client.rb"), "wb") do |file|
-          file.write(format_config_file(data))
-        end
-      end
-
       def windows_run_command
-        windows_chef_bindir = config[:windows_chef_bindir].gsub(/\\/, '\\')
-        cmd = ["#{windows_chef_bindir}\\chef-client -z"]
+        cmd = ["#{config[:windows_chef_bindir]}\\chef-client -z"]
         args = [
           "--config #{config[:windows_root_path]}\\client.rb",
           "--log_level #{config[:log_level]}"
@@ -78,7 +68,7 @@ module Kitchen
         if config[:json_attributes]
           args << "--json-attributes #{config[:windows_root_path]}\\dna.json"
         end
-        cmd.concat(args).join(" ")
+        (cmd + args).join(" ")
       end
 
       def prepare_run_script
