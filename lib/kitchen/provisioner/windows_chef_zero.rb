@@ -14,12 +14,17 @@ module Kitchen
       default_config :windows_root_path, 'C:\Windows\Temp\kitchen'
       default_config :windows_chef_bindir, 'C:\opscode\chef\bin'
 
-      def prepare_command
+      def create_sandbox
+        super
+        prepare_chef_client_zero_rb
+        prepare_validation_pem
+        prepare_client_rb
         prepare_run_script
       end
 
       def run_command
-        "cmd /c #{run_script_path}"
+        run_script = File.join(config[:root_path], "run_client.bat")
+        "cmd /c #{run_script}"
       end
 
       private
@@ -76,12 +81,8 @@ module Kitchen
         cmd.concat(args).join(" ")
       end
 
-      def run_script_path
-        File.join(config[:root_path], "run_client.bat")
-      end
-
       def prepare_run_script
-        File.open(run_script_path, "wb") do |file|
+        File.open(File.join(sandbox_path, "run_client.bat"), "wb") do |file|
           file.write(windows_run_command)
         end
       end
