@@ -14,21 +14,13 @@ module Kitchen
       default_config :windows_root_path, 'C:\Windows\Temp\kitchen'
       default_config :windows_chef_bindir, 'C:\opscode\chef\bin'
 
-      def run_command
-        windows_chef_bindir = config[:windows_chef_bindir].gsub(/\\/, '\\')
-        cmd = ["CALL", "#{windows_chef_bindir}\\chef-client -z"]
+      def prepare_command
+        prepare_run_script
+      end
 
-        args = [
-          "--config #{config[:windows_root_path]}\\client.rb",
-          "--log_level #{config[:log_level]}"
-        ]
-        if config[:chef_zero_port]
-          args <<  "--chef-zero-port #{config[:chef_zero_port]}"
-        end
-        if config[:json_attributes]
-          args << "--json-attributes #{config[:windows_root_path]}\\dna.json"
-        end
-        cmd.concat(args).join(" ")
+      def run_command
+        run_script = File.join(sandbox_path, "run_client.bat")
+        ["cmd /c", run_script].join(" ")
       end
 
       private
@@ -66,6 +58,28 @@ module Kitchen
 
         File.open(File.join(sandbox_path, "client.rb"), "wb") do |file|
           file.write(format_config_file(data))
+        end
+      end
+
+      def windows_run_command
+        windows_chef_bindir = config[:windows_chef_bindir].gsub(/\\/, '\\')
+        cmd = ["#{windows_chef_bindir}\\chef-client -z"]
+        args = [
+          "--config #{config[:windows_root_path]}\\client.rb",
+          "--log_level #{config[:log_level]}"
+        ]
+        if config[:chef_zero_port]
+          args <<  "--chef-zero-port #{config[:chef_zero_port]}"
+        end
+        if config[:json_attributes]
+          args << "--json-attributes #{config[:windows_root_path]}\\dna.json"
+        end
+        cmd.concat(args).join(" ")
+      end
+
+      def prepare_run_script
+        File.open(File.join(sandbox_path, "run_client.bat"), "wb") do |file|
+          file.write(windows_run_command)
         end
       end
     end
