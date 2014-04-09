@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["portertech@gmail.com"]
   spec.summary       = "A Test-Kitchen Chef Zero provisioner for Windows"
   spec.description   = "A Test-Kitchen Chef Zero provisioner for Windows"
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/portertech/windows_chef_zero"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
