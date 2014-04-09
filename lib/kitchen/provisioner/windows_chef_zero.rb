@@ -13,6 +13,12 @@ module Kitchen
       default_config :require_chef_omnibus, false
       default_config :windows_root_path, 'C:\Windows\Temp\kitchen'
       default_config :windows_chef_bindir, 'C:\opscode\chef\bin'
+      default_config :disabled_ohai_plugins, %w[
+        azure c cloud ec2 rackspace eucalyptus command dmi dmi_common
+        erlang gce groovy ip_scopes java keys lua linode mono network_listeners
+        nodejs openstack passwd perl php python ssh_host_key uptime virtualization
+        windows::virtualization windows::kernel_devices
+      ]
 
       def create_sandbox
         super
@@ -47,6 +53,7 @@ module Kitchen
           :client_key       => "#{root}\\client.pem",
           :chef_server_url  => "http://127.0.0.1:8889",
           :encrypted_data_bag_secret => "#{root}\\encrypted_data_bag_secret",
+          "Ohai::Config::disabled_plugins =" => config[:disabled_ohai_plugins]
         }
       end
 
