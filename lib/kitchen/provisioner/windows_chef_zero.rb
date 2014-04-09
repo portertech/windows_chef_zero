@@ -14,9 +14,9 @@ module Kitchen
       default_config :windows_root_path, 'C:\Windows\Temp\kitchen'
       default_config :windows_chef_bindir, 'C:\opscode\chef\bin'
       default_config :disabled_ohai_plugins, %w[
-        c cloud ec2 rackspace eucalyptus command dmi dmi_common
-        erlang groovy ip_scopes java keys lua mono network_listeners
-        passwd perl php python ssh_host_key uptime virtualization
+        azure c cloud ec2 rackspace eucalyptus command dmi dmi_common
+        erlang gce groovy ip_scopes java keys lua linode mono network_listeners
+        nodejs openstack passwd perl php python ssh_host_key uptime virtualization
         windows::virtualization windows::kernel_devices
       ]
 
