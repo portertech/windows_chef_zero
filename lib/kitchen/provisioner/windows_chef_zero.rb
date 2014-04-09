@@ -53,7 +53,7 @@ module Kitchen
           :client_key       => "#{root}\\client.pem",
           :chef_server_url  => "http://127.0.0.1:8889",
           :encrypted_data_bag_secret => "#{root}\\encrypted_data_bag_secret",
-          "Ohai::Config::disabled_plugins" => config[:disabled_ohai_plugins]
+          "Ohai::Config::disabled_plugins =" => config[:disabled_ohai_plugins]
         }
       end
 
