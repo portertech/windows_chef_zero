@@ -1,4 +1,4 @@
-# A Chef Zero provisioner for Windows
+## A Chef Zero provisioner for Windows
 
 This is a temporarily solution to a problem, getting Test-Kitchen to work on Windows.
 
