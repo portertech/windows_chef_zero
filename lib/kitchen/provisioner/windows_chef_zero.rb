@@ -23,7 +23,7 @@ module Kitchen
       end
 
       def run_command
-        "cmd /c #{config[:windows_root_path]}\\run_client.bat"
+        File.join(config[:root_path], "run_client.bat")
       end
 
       private
