@@ -19,8 +19,7 @@ module Kitchen
       end
 
       def run_command
-        run_script = File.join(sandbox_path, "run_client.bat")
-        ["cmd /c", run_script].join(" ")
+        "cmd /c #{run_script_path}"
       end
 
       private
@@ -77,8 +76,12 @@ module Kitchen
         cmd.concat(args).join(" ")
       end
 
+      def run_script_path
+        File.join(config[:root_path], "run_client.bat")
+      end
+
       def prepare_run_script
-        File.open(File.join(sandbox_path, "run_client.bat"), "wb") do |file|
+        File.open(run_script_path, "wb") do |file|
           file.write(windows_run_command)
         end
       end
