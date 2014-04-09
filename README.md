@@ -1,32 +1,33 @@
-# WindowsChefZero
+# A Chef Zero provisioner for Windows
 
-TODO: Write a gem description
-
-## Requirements
-
-https://github.com/joefitzgerald/packer-windows
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'windows_chef_zero'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install windows_chef_zero
+This is a temporarily solution to a problem, getting Test-Kitchen to work on Windows.
 
 ## Usage
 
-TODO: Write usage instructions here
+Use https://github.com/joefitzgerald/packer-windows to build a box, `windows_2012_r2`.
+
+Gemfile
+
+```
+gem "windows_chef_zero"
+```
+
+.kitchen.yml
+
+```
+platforms:
+  name: windows_2012_r2
+  driver:
+    box: windows_2012_r2
+    customize:
+      memory: 2048
+  provisioner:
+    name: windows_chef_zero
+```
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/windows_chef_zero/fork )
+1. Fork it ( https://github.com/portertech/windows_chef_zero/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
