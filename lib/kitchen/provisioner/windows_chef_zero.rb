@@ -75,9 +75,7 @@ module Kitchen
         if config[:json_attributes]
           args << "--json-attributes #{config[:windows_root_path]}\\dna.json"
         end
-        chef_client = (cmd + args).join(" ")
-        exit_code = "EXIT /B %ERRORLEVEL%"
-        "#{chef_client} & #{exit_code}"
+        (cmd + args).join(" ")
       end
 
       def prepare_run_script
