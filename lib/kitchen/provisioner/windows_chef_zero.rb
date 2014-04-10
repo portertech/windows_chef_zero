@@ -57,10 +57,33 @@ module Kitchen
         }
       end
 
+      def exception_handler
+        <<-PREPARE.gsub(/^ {10}/, "")
+          class KillSSH < Chef::Handler
+            def report
+              netstat = `netstat -no`
+              session = netstat.lines.grep(/:22/).last
+              pid = session.split.last.to_i
+              Process.kill("KILL", pid)
+              Process.waitpid(pid)
+            end
+          end
+          exception_handlers << KillSSH.new
+        PREPARE
+      end
+
       def format_config_file(data)
         data.each.map { |attr, value|
           [attr, (value.is_a?(Array) ? value.to_s : %{'#{value}'})].join(" ")
         }.join("\n")
+      end
+
+      def prepare_client_rb
+        config_rb = default_config_rb.merge(config[:client_rb])
+        client_rb = [format_config_file(config_rb), exception_handler].join("\n")
+        File.open(File.join(sandbox_path, "client.rb"), "wb") do |file|
+          file.write(client_rb)
+        end
       end
 
       def windows_run_command
@@ -75,9 +98,7 @@ module Kitchen
         if config[:json_attributes]
           args << "--json-attributes #{config[:windows_root_path]}\\dna.json"
         end
-        chef_client = (cmd + args).join(" ")
-        exit_code = "EXIT /B %ERRORLEVEL%"
-        "#{chef_client} & #{exit_code}"
+        (cmd + args).join(" ")
       end
 
       def prepare_run_script
