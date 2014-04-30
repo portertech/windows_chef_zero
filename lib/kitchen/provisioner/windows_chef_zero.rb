@@ -28,7 +28,7 @@ module Kitchen
 
       def create_sandbox
         super
-        prepare_install_ps1
+        prepare_install_ps1 if config[:require_chef_omnibus]
         prepare_chef_client_zero_rb
         prepare_validation_pem
         prepare_client_rb
@@ -38,7 +38,7 @@ module Kitchen
       # We're hacking Test Kitchen's life-cycle a little here but YOLO.
       def run_command
         cmds = []
-        cmds << install_chef_command
+        cmds << install_chef_command if config[:require_chef_omnibus]
         cmds << File.join(config[:windows_root_path], 'run_client.bat')
         # Since these commands most likely run under cygwin's `/bin/sh`
         # let's make sure all paths have forward slashes.
@@ -100,7 +100,14 @@ module Kitchen
       end
 
       def prepare_install_ps1
-        chef_version = config[:require_chef_omnibus] || 'latest'
+        url = config[:chef_omnibus_url]
+        flag = config[:require_chef_omnibus]
+        version = if flag.is_a?(String) && flag != 'latest'
+          "v=#{flag.downcase}"
+        else
+          ''
+        end
+
         File.open(File.join(sandbox_path, "install.ps1"), "wb") do |file|
           file.write <<-INSTALL.gsub(/^ {12}/, '')
             $env:Path = "C:\\opscode\\chef\\bin"
@@ -114,11 +121,11 @@ module Kitchen
 
             # If the current and desired versions don't match
             # install Chef.
-            if (-Not ($installed_chef_version -match '#{chef_version}')) {
-              Write-Host "-----> Installing Chef Omnibus (#{chef_version})"
+            if (-Not ($installed_chef_version -match '#{flag}')) {
+              Write-Host "-----> Installing Chef Omnibus (#{flag})"
               $downloader = New-Object System.Net.WebClient
-              $download_path = Join-Path '#{config[:windows_root_path]}' 'chef-client-#{chef_version}.windows.msi'
-              $downloader.DownloadFile('#{config[:chef_omnibus_url]}?v=#{chef_version}', $download_path)
+              $download_path = Join-Path '#{config[:windows_root_path]}' 'chef-client-#{flag}.windows.msi'
+              $downloader.DownloadFile('#{url}?#{version}', $download_path)
               $install_process = Start-Process -FilePath 'msiexec.exe' -ArgumentList "/q /i $download_path" -Wait -Passthru
             }
           INSTALL
