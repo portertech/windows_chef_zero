@@ -10,7 +10,7 @@ module Kitchen
     class WindowsChefZero < ChefZero
 
       default_config :sudo, false
-      default_config :chef_omnibus_url, 'http://www.getchef.com/chef/install.msi'
+      default_config :chef_omnibus_url, "http://www.getchef.com/chef/install.msi"
       default_config :windows_root_path, 'C:\Windows\Temp\kitchen'
       default_config :windows_chef_bindir, 'C:\opscode\chef\bin'
       default_config :disabled_ohai_plugins, %w[
@@ -23,8 +23,7 @@ module Kitchen
       # It would be difficult to make the existing
       # `Kitchen::Provisioner::ChefBase#install_command`
       # Windows-friendly so we'll just make it no-op.
-      def install_command
-      end
+      def install_command; end
 
       def create_sandbox
         super
@@ -35,16 +34,16 @@ module Kitchen
         prepare_run_script
       end
 
-      # We're hacking Test Kitchen's life-cycle a little here but YOLO.
+      # We're hacking Test Kitchen's life-cycle a little here, but YOLO.
       def run_command
         cmds = []
         cmds << install_chef_command if config[:require_chef_omnibus]
-        cmds << File.join(config[:windows_root_path], 'run_client.bat')
+        cmds << File.join(config[:windows_root_path], "run_client.bat")
         # Since these commands most likely run under cygwin's `/bin/sh`
         # let's make sure all paths have forward slashes.
-        cmds.map do |cmd|
-          cmd.gsub("\\", '/')
-        end.join('; ')
+        cmds.map { |cmd|
+          cmd.gsub("\\", "/")
+        }.join("; ")
       end
 
       private
@@ -102,14 +101,14 @@ module Kitchen
       def prepare_install_ps1
         url = config[:chef_omnibus_url]
         flag = config[:require_chef_omnibus]
-        version = if flag.is_a?(String) && flag != 'latest'
+        version = if flag.is_a?(String) && flag != "latest"
           "v=#{flag.downcase}"
         else
-          ''
+          ""
         end
 
         File.open(File.join(sandbox_path, "install.ps1"), "wb") do |file|
-          file.write <<-INSTALL.gsub(/^ {12}/, '')
+          file.write <<-INSTALL.gsub(/^ {12}/, "")
             $env:Path = "C:\\opscode\\chef\\bin"
 
             # Retrieve current Chef version
@@ -133,7 +132,7 @@ module Kitchen
       end
 
       def install_chef_command
-        install_script_path = File.join(config[:windows_root_path], 'install.ps1')
+        install_script_path = File.join(config[:windows_root_path], "install.ps1")
         "powershell.exe -InputFormat None -ExecutionPolicy bypass -File #{install_script_path}"
       end
     end
