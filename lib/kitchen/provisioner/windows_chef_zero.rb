@@ -13,6 +13,7 @@ module Kitchen
       default_config :chef_omnibus_url, "http://www.getchef.com/chef/install.msi"
       default_config :windows_root_path, 'C:\Windows\Temp\kitchen'
       default_config :windows_chef_bindir, 'C:\opscode\chef\bin'
+      default_config :windows_chef_ruby, 'C:\opscode\chef\embedded\bin\ruby'
       default_config :disabled_ohai_plugins, %w[
         azure c cloud ec2 rackspace eucalyptus command dmi dmi_common
         erlang gce groovy ip_scopes java keys lua linode mono network_listeners
@@ -78,7 +79,7 @@ module Kitchen
       end
 
       def windows_run_command
-        cmd = ["#{config[:windows_chef_bindir]}\\chef-client -z"]
+        cmd = ["#{config[:windows_chef_ruby]} #{config[:windows_chef_bindir]}\\chef-client -z"]
         args = [
           "--config #{config[:windows_root_path]}\\client.rb",
           "--log_level #{config[:log_level]}"
