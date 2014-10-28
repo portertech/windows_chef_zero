@@ -109,7 +109,7 @@ module Kitchen
 
         File.open(File.join(sandbox_path, "install.ps1"), "wb") do |file|
           file.write <<-INSTALL.gsub(/^ {12}/, "")
-            $env:Path = "C:\\opscode\\chef\\bin"
+            $env:Path = "C:\\opscode\\chef\\bin;C:\\opscode\\chef\\embedded\\bin"
 
             # Retrieve current Chef version
             try {
